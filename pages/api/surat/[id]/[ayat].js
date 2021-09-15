@@ -3,7 +3,7 @@ const axios = require('axios');
 const Fuse = require('fuse.js');
 
 
-export default (async ({query: {id, ayat}}, res)) => {
+export default async ({query: {id, ayat}}, res) => {
     const surat = JSON.parse(readFileSync('./utils/data/surat.json'));
     const options = {
         includeScore: true,
