@@ -1,8 +1,9 @@
-const {readFileSync, writeFileSync, existsSync} = require('fs');
+const {readFileSync, writeFileSync, existsSync, readFile} = require('fs');
 const axios = require('axios');
 const Fuse = require('fuse.js');
 
-export default ({query: {id, ayat}}, res) => {
+
+export default (async ({query: {id, ayat}}, res)) => {
     const surat = JSON.parse(readFileSync('./utils/data/surat.json'));
     const options = {
         includeScore: true,
@@ -14,7 +15,8 @@ export default ({query: {id, ayat}}, res) => {
 
     const pathFile = `./utils/data/surat/${idSurat}.js`;
     if(existsSync(pathFile)){
-        const dataSurat = readFileSync(pathFile);
+        // const dataSurat = readFileSync(pathFile);
+        const dataSurat = await readFile(pathFile);
         if(dataSurat) return res.status(200).json({success: true, data: JSON.parse(dataSurat)});
     }
 
@@ -25,5 +27,4 @@ export default ({query: {id, ayat}}, res) => {
         writeFileSync(pathFile, JSON.stringify(d.data));
     })
     .catch(e => res.status(400).json({success:false, message: 'surat tidak tersedia'}))
-
 }
