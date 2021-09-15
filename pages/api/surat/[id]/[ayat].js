@@ -1,10 +1,11 @@
 const {readFileSync, writeFileSync, existsSync, readFile} = require('fs');
 const axios = require('axios');
 const Fuse = require('fuse.js');
+const path = require('path');
 
 
 export default async ({query: {id, ayat}}, res) => {
-    const surat = JSON.parse(readFileSync('./utils/data/surat.json'));
+    const surat = JSON.parse(readFileSync(path.join(__dirname, '/utils/data/surat.json')));
     const options = {
         includeScore: true,
         keys: ['nomor', 'nama', 'nama_latin', 'arti']
@@ -13,7 +14,7 @@ export default async ({query: {id, ayat}}, res) => {
     const result = fuse.search(id);
     const idSurat = result[0].item.nomor;
 
-    const pathFile = `./utils/data/surat/${idSurat}.js`;
+    const pathFile = path.join(__dirname, `/utils/data/surat/${idSurat}.js`);
     if(existsSync(pathFile)){
         // const dataSurat = readFileSync(pathFile);
         const dataSurat = await readFile(pathFile);
